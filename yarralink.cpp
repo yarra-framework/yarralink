@@ -13,7 +13,6 @@
     #include "MrServers/MrProtSrv/MrProtocol/libUILink/UILinkSelection.h"
     #include "MrServers/MrProtSrv/MrProtocol/libUILink/UILinkArray.h"
     #include "MrServers/MrProtSrv/MrProtocol/UILink/StdProtRes/StdProtRes.h"
-   // #include "MrServers/MrImaging/libUICtrl/UICtrl.h"
     #include "MrServers/MrMeasSrv/SeqIF/Sequence/Sequence.h" 
  
     #include <vector>
@@ -116,8 +115,6 @@ NLSStatus yarralink::prepare
     // Preparation of sequence done. Output some debug information.
     _COUT << "___Reached end of prepare" << endl; 
 
-	if (pSeqLim->isContextNormal())
-	{
 #ifdef WIN32  
 		if (!clientLaunched)
 		{
@@ -154,7 +151,10 @@ NLSStatus yarralink::prepare
 			clientLaunched=true;
 		}				
 #endif
-	}
+
+	//if (pSeqLim->isContextNormal())
+	//{
+	//}
 	
     return (lStatus);
 }
@@ -190,6 +190,8 @@ NLSStatus yarralink::run
     static const char *ptModule = {"run"};
 	NLS_STATUS         lStatus          = SEQU__NORMAL ; 
 
+	/*
+	
     // ---------------------------------------------------------------------------
     #ifndef VER_VD
         fRTEBInit(&asSLC[0].getROT_MATRIX(), true);
@@ -199,6 +201,8 @@ NLSStatus yarralink::run
 	
     fRTEI(1000     ,           0,        0,      0,            0,              0,            0,       0);	
     lStatus = fRTEBFinish();  
+	
+	*/
 	
 	return(lStatus); 	
 }
