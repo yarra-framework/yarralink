@@ -3,7 +3,13 @@ CPPFLAGS (-DBUILD_SEQU)
 CPPFLAGS (-DSEQUENCE_CLASS_YARRALINK)
 CPPFLAGS (-DSEQUENCE_CLASS)
 CPPFLAGS (-DSEQ_NAMESPACE=SEQ_YARRALINK) 
+
+#************************************************************************
+# Define the software version 
+#************************************************************************
+#CPPFLAGS (-DVER_VB)
 CPPFLAGS (-DVER_VD)
+#CPPFLAGS (-DVER_VE)
 
 CPPSOURCES (yarralink)
 
@@ -24,36 +30,17 @@ LDLIBS (CoilIF)
 LDLIBS (libPACE)
 LDLIBS (libMES)
 LDLIBS (MeasSections)
-#LDLIBS (PerProxies)
 LDLIBS (MeasPatient)
 LDLIBS (libGSL)
-#LDLIBS (MdhProxy)
-#LDLIBS (Conf)
 LDLIBS (MeasNucleiBase)
-#LDLIBS (SpuSerGenericComp)
 LDLIBS (MrBasicObjects)
-
-
-## -----------------------------------------------------------------------------
-LDLIBS (libRT)
-LDLIBS (libSBB)
 LDLIBS (libCSL)
 LDLIBS (libSL)
 LDLIBS (libSeqSysProp)
-LDLIBS (libSeqUT)
-LDLIBS (libSeqUtil)
-LDLIBS (libGSL)
-LDLIBS (libSSL)
-LDLIBS (libUICtrl)
 LDLIBS (MeasNucleiBase)
-LDLIBS (MeasNucleiIF)
 LDLIBS (MrGenericDC)
 LDLIBS (MrParc)
-LDLIBS (MrProt)
 LDLIBS (MrProtocolData)
-LDLIBS (MrTrace)
 LDLIBS (UTrace)
-LDLIBS (SeqBuffer)
-LDLIBS (Sequence)
 
 LIB (yarralink)

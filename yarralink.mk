@@ -17,7 +17,14 @@ CPPFLAGS_LOCAL += -DFLASH
 CPPFLAGS_LOCAL += -DBUILD_SEQU
 CPPFLAGS_LOCAL += -DSEQUENCE_CLASS_YARRALINK
 CPPFLAGS_LOCAL += -DSEQ_NAMESPACE=SEQ_YARRALINK
+
+#************************************************************************
+# Define the software version 
+#************************************************************************
+#CPPFLAGS_LOCAL += -DVER_VB
 CPPFLAGS_LOCAL += -DVER_VD
+#CPPFLAGS_LOCAL += -DVER_VE
+
 
 #************************************************************************
 LDLIBS += Sequence.lib

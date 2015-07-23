@@ -33,54 +33,29 @@
 using namespace SEQ_NAMESPACE;
 using namespace std;
 
-#define _COUT if(0) cout
 
 static sSLICE_POS       asSLC[K_NO_SLI_MAX];
 
-// ----------------------------------------------------------------------------------
-// Constructor
-// ----------------------------------------------------------------------------------        
+
 yarralink::yarralink()
 {
-    _COUT << "___Sequence created" << endl;
-	
 	clientLaunched=false;
 }
 
 
-// ----------------------------------------------------------------------------------
-// Destructor
-// ----------------------------------------------------------------------------------   
 yarralink::~yarralink()
 {
-    _COUT << "___Sequence destructed" << endl;
 }
 
 
-// ----------------------------------------------------------------------------------
-// Initialization of the sequence
-// ----------------------------------------------------------------------------------
-NLSStatus yarralink::initialize
-(
-    SeqLim      *pSeqLim
-)
+NLSStatus yarralink::initialize(SeqLim *pSeqLim)
 {
-    _COUT << "___Called initialize" << endl;
+    pSeqLim->setMyOrigFilename( __FILE__ );
+    pSeqLim->setSequenceOwner( "USER" );
 
-    // -------------------------------------------------------- 
-    // Give general information about the sequence
-    // -------------------------------------------------------- 
-
-    pSeqLim->setMyOrigFilename ( __FILE__ );
-    pSeqLim->setSequenceOwner    ( "USER" );
-
-    // The sequence hint text is available via the "imprint name.dll" command
-    pSeqLim->setSequenceHintText( (char *) "\n\
-                                    Application: Yarra Client Launcher \n\
-                                    Build: "__DATE__"   "__TIME__"\n");
-
+    pSeqLim->setSequenceHintText( (char *) "YarraLink " YL_VERSION "\nBuild: "__DATE__" "__TIME__"\n");
+									
 #ifdef WIN32    
-    // This configures some UI behavior (e.g. TD) and has to be called before my own SolveHandlers
     fStdImagingInitPost (pSeqLim);
 #endif
 
@@ -88,20 +63,10 @@ NLSStatus yarralink::initialize
 }
 
 
-// ----------------------------------------------------------------------------------
-// Preparation of the sequence during binary search and prior to sequence execution
-// ----------------------------------------------------------------------------------
-NLSStatus yarralink::prepare
-(
-    MrProt     *pMrProt,     // IMPORT: Measurement protocol  
-    SeqLim     *pSeqLim,     // IMPORT: Sequence limits       
-    SeqExpo    *pSeqExpo     // EXPORT: Returned values       
-)
-{
-    _COUT << "___Called prepare" << endl;
-    
+NLSStatus yarralink::prepare(MrProt *pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo)
+{  
 	NLS_STATUS  lStatus = SEQU__NORMAL;
-    lStatus = fSUPrepSlicePosArray (VER_PTR(pMrProt), VER_PTR(pSeqLim), asSLC);
+    lStatus = fSUPrepSlicePosArray(VER_PTR(pMrProt), VER_PTR(pSeqLim), asSLC);
 	
     double dTotalMeasureTimeUsec    =   1000;
     pSeqExpo->setPreScans                    ( 0 );
@@ -111,9 +76,6 @@ NLSStatus yarralink::prepare
     pSeqExpo->setMeasureTimeUsec             ( dTotalMeasureTimeUsec ); 
     pSeqExpo->setTotalMeasureTimeUsec        ( dTotalMeasureTimeUsec );
 	pSeqExpo->setRelevantReadoutsForMeasTime ( 0 ); 
-
-    // Preparation of sequence done. Output some debug information.
-    _COUT << "___Reached end of prepare" << endl; 
 
 #ifdef WIN32  
 		if (!clientLaunched)
@@ -127,7 +89,7 @@ NLSStatus yarralink::prepare
 
 			TCHAR cmdline[512] = TEXT("C:\\MedCom\\MriCustomer\\seq\\yarra\\ort.dll");
 			
-			// Start the child process. 
+			// Start the child process
 			if( !CreateProcess( NULL,   // No module name (use command line)
 				cmdline,        // Command line
 				NULL,           // Process handle not inheritable
@@ -141,7 +103,6 @@ NLSStatus yarralink::prepare
 			) 
 			{
 				printf( "CreateProcess failed (%d).\n", GetLastError() );
-				//return;
 			}
 
 			// Close process and thread handles. 
@@ -151,61 +112,22 @@ NLSStatus yarralink::prepare
 			clientLaunched=true;
 		}				
 #endif
-
-	//if (pSeqLim->isContextNormal())
-	//{
-	//}
 	
     return (lStatus);
 }
 
 
-// ----------------------------------------------------------------------------------
-// Check of the sequence for SAR and gradient stimulation
-// ----------------------------------------------------------------------------------   
-NLSStatus yarralink::check
-(
-    MrProt       *pMrProt,            // IMP: user choice parameters  
-    SeqLim       *pSeqLim,            // IMP: limits from fSEQInit()  
-    SeqExpo      *pSeqExpo,           // IMP: exports from fSEQPrep() 
-    SEQCheckMode *pSEQCheckMode       // unused                       
-)
+NLSStatus yarralink::check(MrProt *pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo, SEQCheckMode *pSEQCheckMode)
 {        
-    static const char *ptModule  = {"check"}; // Name of this module
-    NLS_STATUS   lStatus         = SEQU__NORMAL;  
-    return(lStatus);
+    return (SEQU__NORMAL);
 }
 
 
-// ----------------------------------------------------------------------------------
-// Execution of the sequence
-// ----------------------------------------------------------------------------------    
-NLSStatus yarralink::run
-(
-    MrProt  *pMrProt,    // IMP: user choice parameters  
-    SeqLim  *pSeqLim,    // IMP: limits from fSEQInit()  
-    SeqExpo *pSeqExpo    // IMP: exports from fSEQPrep() 
-)
+NLSStatus yarralink::run(MrProt *pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo)
 {
-    static const char *ptModule = {"run"};
-	NLS_STATUS         lStatus          = SEQU__NORMAL ; 
-
-	/*
-	
-    // ---------------------------------------------------------------------------
-    #ifndef VER_VD
-        fRTEBInit(&asSLC[0].getROT_MATRIX(), true);
-    #else
-        fRTEBInit(asSLC[0].getROT_MATRIX());
-    #endif	
-	
-    fRTEI(1000     ,           0,        0,      0,            0,              0,            0,       0);	
-    lStatus = fRTEBFinish();  
-	
-	*/
-	
-	return(lStatus); 	
+	return(SEQU__NORMAL); 	
 }
+
 
 NLS_STATUS yarralink::runKernel(MrProt *pMrProt,SeqLim *pSeqLim, SeqExpo *pSeqExpo, long lKernelMode, long lSlice, long lPartition, long lLine)
 {
@@ -213,11 +135,12 @@ NLS_STATUS yarralink::runKernel(MrProt *pMrProt,SeqLim *pSeqLim, SeqExpo *pSeqEx
 }
 
 
+
 // ----------------------------------------------------------------------------------
-// VD line interface
+// VD/VE line interface
 // ----------------------------------------------------------------------------------   
 
-#ifdef VER_VD
+#ifndef VER_VB
 
     NLSStatus yarralink::initialize (SeqLim &rSeqLim)
     {

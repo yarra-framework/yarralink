@@ -1,11 +1,11 @@
-
-
 #ifndef yarralink_h
 #define yarralink_h 1
 
+#define YL_VERSION "0.1b"
+
+
 #define PM_USE_SEQIF
 
-// ----------------------------------------------------------------------------------
 #include "MrServers/MrMeasSrv/SeqFW/libSSL/libSSL.h"
 #include "MrServers/MrMeasSrv/MeasUtils/nlsmac.h" 
 #include "MrServers/MrMeasSrv/SeqIF/sde_allincludes.h"
@@ -20,7 +20,6 @@
 
 #ifdef WIN32
     #include <afx.h>                      
-   // #include "MrServers/MrImaging/libUICtrl/UICtrl.h"
 #endif
 
 #ifdef WIN32
@@ -34,7 +33,6 @@
 #endif
 
 
-// ----------------------------------------------------------------------------------
 class MrProt;
 class SeqLim;
 class SeqExpo;
@@ -48,52 +46,36 @@ namespace MrProtocolData
 
 namespace SEQ_NAMESPACE
 {
+	class yarralink : public StdSeqIF
+	{
+		public:
 
-// ----------------------------------------------------------------------------------
-class yarralink : public StdSeqIF
-{
-    public:
+			yarralink();
+			virtual ~yarralink();
 
-        // ----------------------------------------------------------------------------------
-        // Constructor
-        // ----------------------------------------------------------------------------------        
-        yarralink();
+			// ----------------------------------------------------------------------------------
+			// VB line interface
+			// ----------------------------------------------------------------------------------    		
+			virtual NLSStatus initialize(SeqLim * pSeqLim);
+			virtual NLSStatus prepare(MrProt *pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo);
+			virtual NLSStatus check(MrProt * pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo, SEQCheckMode *pSEQCheckMode);
+			virtual NLSStatus run(MrProt *pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo);
+			virtual NLS_STATUS runKernel(MrProt *pMrProt,SeqLim *pSeqLim, SeqExpo *pSeqExpo, long lKernelMode, long lSlice, long lPartition, long lLine);
 
-        // ----------------------------------------------------------------------------------
-        // Destructor
-        // ----------------------------------------------------------------------------------        
-        virtual ~yarralink();
-
-
-        // ----------------------------------------------------------------------------------
-        // VB line interface
-        // ----------------------------------------------------------------------------------    		
-        virtual NLSStatus initialize(SeqLim * pSeqLim);
-        virtual NLSStatus prepare(MrProt *pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo);
-        virtual NLSStatus check(MrProt * pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo, SEQCheckMode *pSEQCheckMode);
-        virtual NLSStatus run(MrProt *pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo);
-        virtual NLS_STATUS runKernel(MrProt *pMrProt,SeqLim *pSeqLim, SeqExpo *pSeqExpo, long lKernelMode, long lSlice, long lPartition, long lLine);
-
-
-        // ----------------------------------------------------------------------------------
-        // VD line interface
-        // ----------------------------------------------------------------------------------        
-        #ifdef VER_VD
-            virtual NLSStatus initialize (SeqLim &rSeqLim);
-            virtual NLSStatus prepare (MrProt &rMrProt, SeqLim &rSeqLim, SeqExpo &rSeqExpo);
-            virtual NLSStatus check (MrProt &rMrProt, SeqLim &rSeqLim, SeqExpo &rSeqExpo, SEQCheckMode *  pSEQCheckMode);
-            virtual NLSStatus run (MrProt &rMrProt, SeqLim &rSeqLim, SeqExpo &rSeqExpo);
-            virtual NLS_STATUS runKernel (MrProt &rMrProt, SeqLim &rSeqLim, SeqExpo &rSeqExpo, long lKernelMode, long lSlice, long lPartition, long lLine);
-        #endif
-
-		
-    protected:
-	
-		bool clientLaunched;
-
-};
-
+			// ----------------------------------------------------------------------------------
+			// VD/VE line interface
+			// ----------------------------------------------------------------------------------        
+			#ifndef VER_VB
+				virtual NLSStatus initialize (SeqLim &rSeqLim);
+				virtual NLSStatus prepare (MrProt &rMrProt, SeqLim &rSeqLim, SeqExpo &rSeqExpo);
+				virtual NLSStatus check (MrProt &rMrProt, SeqLim &rSeqLim, SeqExpo &rSeqExpo, SEQCheckMode *  pSEQCheckMode);
+				virtual NLSStatus run (MrProt &rMrProt, SeqLim &rSeqLim, SeqExpo &rSeqExpo);
+				virtual NLS_STATUS runKernel (MrProt &rMrProt, SeqLim &rSeqLim, SeqExpo &rSeqExpo, long lKernelMode, long lSlice, long lPartition, long lLine);
+			#endif
+			
+		protected:	
+			bool clientLaunched;
+	};
 }
 
 #endif // yarralink_h
-
