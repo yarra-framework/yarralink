@@ -2,7 +2,6 @@
 #include "yarralink_ver.h"
 
 #include "MrServers/MrImaging/libSBB/SBBTSat.h"
-#include "MrServers/MrImaging/seq/SystemProperties.h"   
 #include "MrServers/MrImaging/seq/SystemProperties.h"        
 #include "MrServers/MrProtSrv/MrProt/MrSlice.h"
 
