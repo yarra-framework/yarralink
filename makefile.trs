@@ -8,8 +8,8 @@ CPPFLAGS (-DSEQ_NAMESPACE=SEQ_YARRALINK)
 # Define the software version 
 #************************************************************************
 #CPPFLAGS (-DVER_VB)
-#CPPFLAGS (-DVER_VD)
-CPPFLAGS (-DVER_VE)
+CPPFLAGS (-DVER_VD)
+#CPPFLAGS (-DVER_VE)
 
 CPPSOURCES (yarralink)
 
@@ -17,9 +17,9 @@ CPPSOURCES (yarralink)
 #************************************************************************
 # Comment out following 3 lines for VE 
 #************************************************************************
-#LDLIBS (libRT)   
-#LDLIBS (SeqBuffer)
-#LDLIBS (CoilIF)
+LDLIBS (libRT)   
+LDLIBS (SeqBuffer)
+LDLIBS (CoilIF)
 
 
 LDLIBS (Sequence)
