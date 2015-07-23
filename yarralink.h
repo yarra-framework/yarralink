@@ -11,7 +11,7 @@
 #include "MrServers/MrMeasSrv/SeqIF/sde_allincludes.h"
 #include "MrServers/MrMeasSrv/SeqIF/Sequence/SeqIF.h"
 #include "MrServers/MrImaging/libSBB/StdSeqIF.h"
-#include  "MrServers/MrImaging/libSBB/SEQLoop.h"  
+#include "MrServers/MrImaging/libSBB/SEQLoop.h"  
 
 #ifdef BUILD_SEQU
     #define __OWNER
