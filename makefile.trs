@@ -8,17 +8,24 @@ CPPFLAGS (-DSEQ_NAMESPACE=SEQ_YARRALINK)
 # Define the software version 
 #************************************************************************
 #CPPFLAGS (-DVER_VB)
-CPPFLAGS (-DVER_VD)
-#CPPFLAGS (-DVER_VE)
+#CPPFLAGS (-DVER_VD)
+CPPFLAGS (-DVER_VE)
 
 CPPSOURCES (yarralink)
+
+
+#************************************************************************
+# Comment out following 3 lines for VE 
+#************************************************************************
+#LDLIBS (libRT)   
+#LDLIBS (SeqBuffer)
+#LDLIBS (CoilIF)
+
 
 LDLIBS (Sequence)
 LDLIBS (libSBB)
 LDLIBS (libSSL)
-LDLIBS (libRT)   
 LDLIBS (libUILink)
-LDLIBS (SeqBuffer)
 LDLIBS (libSeqUtil)
 LDLIBS (libSeqUT)
 LDLIBS (libUICtrl)
@@ -26,7 +33,6 @@ LDLIBS (MrTrace)
 LDLIBS (MeasNucleiIF)
 LDLIBS (MrProt)
 LDLIBS (libUILink)
-LDLIBS (CoilIF)
 LDLIBS (libPACE)
 LDLIBS (libMES)
 LDLIBS (MeasSections)

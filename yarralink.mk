@@ -22,8 +22,8 @@ CPPFLAGS_LOCAL += -DSEQ_NAMESPACE=SEQ_YARRALINK
 # Define the software version 
 #************************************************************************
 #CPPFLAGS_LOCAL += -DVER_VB
-CPPFLAGS_LOCAL += -DVER_VD
-#CPPFLAGS_LOCAL += -DVER_VE
+#CPPFLAGS_LOCAL += -DVER_VD
+CPPFLAGS_LOCAL += -DVER_VE
 
 
 #************************************************************************

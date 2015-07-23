@@ -8,10 +8,14 @@
 
 #include "MrServers/MrMeasSrv/SeqFW/libSSL/libSSL.h"
 #include "MrServers/MrMeasSrv/MeasUtils/nlsmac.h" 
-#include "MrServers/MrMeasSrv/SeqIF/sde_allincludes.h"
 #include "MrServers/MrMeasSrv/SeqIF/Sequence/SeqIF.h"
 #include "MrServers/MrImaging/libSBB/StdSeqIF.h"
 #include "MrServers/MrImaging/libSBB/SEQLoop.h"  
+
+#ifndef VER_VE
+    #include "MrServers/MrMeasSrv/SeqIF/sde_allincludes.h"
+#endif
+
 
 #ifdef BUILD_SEQU
     #define __OWNER
@@ -29,6 +33,7 @@
     #include "MrServers/MrProtSrv/MrProtocol/libUILink/UILinkArray.h"
     #include "MrServers/MrProtSrv/MrProtocol/UILink/StdProtRes/StdProtRes.h"
     #include "MrServers/MrMeasSrv/SeqIF/Sequence/Sequence.h"
+	#include "MrServers/MrProtSrv/MrProtocol/libUICtrl/UICtrl.h"
     #include <vector>
 #endif
 

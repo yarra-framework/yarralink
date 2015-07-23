@@ -2,7 +2,7 @@
 #define YARRALINK_VER_h 1
 
 
-#ifndef VER_VD
+#ifdef VER_VB
     #define VER_PTR(A) A
     #define VER_REF(A) A
 #else

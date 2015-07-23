@@ -1,11 +1,19 @@
 #include "yarralink.h"
 #include "yarralink_ver.h"
 
-#include "MrServers/MrMeasSrv/SeqIF/sde_allincludes.h"
 #include "MrServers/MrImaging/libSBB/SBBTSat.h"
 #include "MrServers/MrImaging/seq/SystemProperties.h"   
 #include "MrServers/MrImaging/seq/SystemProperties.h"        
 #include "MrServers/MrProtSrv/MrProt/MrSlice.h"
+
+#ifdef VER_VE
+    #include "MrServers/MrImaging/libSeqUtil/libSeqUtil.h"
+    #include "MrServers/MrMeasSrv/MeasNuclei/IF/MeasKnownNuclei.h"
+    #include "MrServers/MrProtSrv/MrProt/MeasParameter/MrSysSpec.h"
+    #include "MrServers/MrProtSrv/MrProt/MeasParameter/MrRXSpec.h"
+    #include "MrServers/MrImaging/seq/SystemProperties.h"
+    #include "MrServers/MrImaging/libSeqSysProp/SysProperties.h"
+#endif
 
 #ifdef WIN32  
     #include "MrServers/MrProtSrv/MrProtocol/UILink/MrStdNameTags.h"
