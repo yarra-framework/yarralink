@@ -9,7 +9,6 @@
 #include "MrServers/MrMeasSrv/SeqFW/libSSL/libSSL.h"
 #include "MrServers/MrMeasSrv/MeasUtils/nlsmac.h" 
 #include "MrServers/MrMeasSrv/SeqIF/Sequence/SeqIF.h"
-#include "MrServers/MrImaging/libSBB/StdSeqIF.h"
 #include "MrServers/MrImaging/libSBB/SEQLoop.h"  
 
 #ifndef VER_VE
@@ -51,7 +50,7 @@ namespace MrProtocolData
 
 namespace SEQ_NAMESPACE
 {
-	class yarralink : public StdSeqIF
+	class yarralink : public SeqIF
 	{
 		public:
 
