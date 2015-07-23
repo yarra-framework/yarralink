@@ -8,6 +8,7 @@ CPPFLAGS (-DSEQ_NAMESPACE=SEQ_YARRALINK)
 # Define the software version 
 #************************************************************************
 #CPPFLAGS (-DVER_VB)
+#CPPFLAGS (-DVER_VB20)
 CPPFLAGS (-DVER_VD)
 #CPPFLAGS (-DVER_VE)
 
