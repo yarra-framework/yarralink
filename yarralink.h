@@ -1,7 +1,7 @@
 #ifndef yarralink_h
 #define yarralink_h 1
 
-#define YL_VERSION "0.1b"
+#define YL_VERSION "YarraLink Ver 0.1b"
 
 
 #define PM_USE_SEQIF
@@ -74,7 +74,8 @@ namespace SEQ_NAMESPACE
 			#endif
 			
 		protected:	
-			bool clientLaunched;
+
+		    bool clientLaunched;
 	};
 }
 
