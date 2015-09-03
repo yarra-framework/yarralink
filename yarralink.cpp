@@ -40,96 +40,105 @@
 using namespace SEQ_NAMESPACE;
 using namespace std;
 
-
 static sSLICE_POS       asSLC[K_NO_SLI_MAX];
-
 
 
 void launchClient()
 {
+
 #ifdef WIN32  
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
 
-	STARTUPINFO si;
-	PROCESS_INFORMATION pi;
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
 
-	ZeroMemory( &si, sizeof(si) );
-	si.cb = sizeof(si);
-	ZeroMemory( &pi, sizeof(pi) );
+    TCHAR cmdline[512] = TEXT("C:\\MedCom\\MriCustomer\\seq\\yarra\\ort.dll");
+    
+    // Start the child process
+    if( !CreateProcess( NULL,   // No module name (use command line)
+        cmdline,                // Command line
+        NULL,                   // Process handle not inheritable
+        NULL,                   // Thread handle not inheritable
+        FALSE,                  // Set handle inheritance to FALSE
+        0,                      // No creation flags
+        NULL,                   // Use parent's environment block
+        NULL,                   // Use parent's starting directory 
+        &si,                    // Pointer to STARTUPINFO structure
+        &pi )                   // Pointer to PROCESS_INFORMATION structure
+    ) 
+    {
+        printf( "CreateProcess failed (%d).\n", GetLastError() );
+    }
 
-	TCHAR cmdline[512] = TEXT("C:\\MedCom\\MriCustomer\\seq\\yarra\\ort.dll");
-	
-	// Start the child process
-	if( !CreateProcess( NULL,   // No module name (use command line)
-		cmdline,        // Command line
-		NULL,           // Process handle not inheritable
-		NULL,           // Thread handle not inheritable
-		FALSE,          // Set handle inheritance to FALSE
-		0,              // No creation flags
-		NULL,           // Use parent's environment block
-		NULL,           // Use parent's starting directory 
-		&si,            // Pointer to STARTUPINFO structure
-		&pi )           // Pointer to PROCESS_INFORMATION structure
-	) 
-	{
-		printf( "CreateProcess failed (%d).\n", GetLastError() );
-	}
-
-	// Close process and thread handles. 
-	CloseHandle( pi.hProcess );
-	CloseHandle( pi.hThread );	
-
+    // Close process and thread handles. 
+    CloseHandle( pi.hProcess );
+    CloseHandle( pi.hThread );	
 #endif	
+
 }
 
 
+// UI handlers used to launch the client via UI controls for the situation that
+// no subject is in the scannner (in this case, the frequency adjustment does
+// not convert and the measurement is stopped before calling prepare with 
+// normal context).
+
 #ifdef WIN32  
-    unsigned ui_WIP_CheckBox_GetLabelId(LINK_BOOL_TYPE* const, char* arg_list[], long lIndex)
+
+unsigned ui_WIP_CheckBox_GetLabelId(LINK_BOOL_TYPE* const, char* arg_list[], long lIndex)
+{
+    static const char* const label1 = "Click to open   >>>";
+    static const char* const label2 = YL_VERSION;
+    static const char* const label3 = "Info at http://yarra.rocks";
+
+    switch (lIndex) 
     {
-        static const char* const label1 = "Click to open   >>>";
-        static const char* const label2 = YL_VERSION;
-        static const char* const label3 = "Info at http://yarra.rocks";
-
-		switch (lIndex) 
-		{
-		case 0:
-			arg_list[0] = (char*)label1; 
-			break;
-		case 1:
-			arg_list[0] = (char*)label2; 
-			break;
-		case 2:
-			arg_list[0] = (char*)label3; 
-			break;
-		}
-
-        return MRI_STD_STRING;
+    case 0:
+        arg_list[0] = (char*)label1; 
+        break;
+    case 1:
+        arg_list[0] = (char*)label2; 
+        break;
+    case 2:
+        arg_list[0] = (char*)label3; 
+        break;
     }
 
-    bool ui_WIP_CheckBox_GetOptions(LINK_BOOL_TYPE* const pThis , std::vector<unsigned>& rOptionVector, unsigned long& rulVerify, long lIndex)
-    {
-        rulVerify = LINK_BOOL_TYPE::VERIFY_OFF;
-        rOptionVector.resize(2);
-        rOptionVector[0] = false;
-        rOptionVector[1] = true;
+    return MRI_STD_STRING;
+}
 
-        return true;
-    }
 
-    bool ui_WIP_CheckBox_GetValue(LINK_BOOL_TYPE* const pThis , long lIndex)
-    {
-        return 0;
-    }
+bool ui_WIP_CheckBox_GetOptions(LINK_BOOL_TYPE* const pThis , std::vector<unsigned>& rOptionVector, unsigned long& rulVerify, long lIndex)
+{
+    rulVerify = LINK_BOOL_TYPE::VERIFY_OFF;
+    rOptionVector.resize(2);
+    rOptionVector[0] = false;
+    rOptionVector[1] = true;
 
-    bool ui_WIP_CheckBox_SetValue(LINK_BOOL_TYPE* const pThis, bool value, long lIndex)
+    return true;
+}
+
+
+bool ui_WIP_CheckBox_GetValue(LINK_BOOL_TYPE* const pThis , long lIndex)
+{
+    return 0;
+}
+
+
+bool ui_WIP_CheckBox_SetValue(LINK_BOOL_TYPE* const pThis, bool value, long lIndex)
+{
+    if (value)
     {
-		if (value)
-		{
-			launchClient();
-		}
-		
-		return true;
+        launchClient();
     }
+    
+    return true;
+}
+
 #endif	
+
 
 
 yarralink::yarralink()
@@ -147,36 +156,37 @@ NLSStatus yarralink::initialize(SeqLim *pSeqLim)
 {
     pSeqLim->setMyOrigFilename( __FILE__ );
     pSeqLim->setSequenceOwner( "USER" );
-
     pSeqLim->setSequenceHintText( (char *) "YarraLink " YL_VERSION "\nBuild: "__DATE__" "__TIME__"\n");
 
 #ifdef WIN32    
 
     fStdImagingInitPost (pSeqLim);
-	
-	if ( LINK_BOOL_TYPE* pBool=_create<LINK_BOOL_TYPE>(pSeqLim, MR_TAG_SEQ_WIP1, (long) 0))
-	{       
-		pBool->registerGetLabelIdHandler  (ui_WIP_CheckBox_GetLabelId);
-		pBool->registerGetOptionsHandler  (ui_WIP_CheckBox_GetOptions);
-		pBool->registerGetValueHandler    (ui_WIP_CheckBox_GetValue);
-		pBool->registerSetValueHandler    (ui_WIP_CheckBox_SetValue);
-	}	
-	
-	if ( LINK_BOOL_TYPE* pBool=_create<LINK_BOOL_TYPE>(pSeqLim, MR_TAG_SEQ_WIP13, (long) 1))
-	{       
-		pBool->registerGetLabelIdHandler  (ui_WIP_CheckBox_GetLabelId);
-		pBool->registerGetOptionsHandler  (ui_WIP_CheckBox_GetOptions);
-		pBool->registerGetValueHandler    (ui_WIP_CheckBox_GetValue);
-		pBool->registerSetValueHandler    (ui_WIP_CheckBox_SetValue);
-	}	
+    
+    // Register UI handlers for the checkboxes shown on the sequence special card
 
-	if ( LINK_BOOL_TYPE* pBool=_create<LINK_BOOL_TYPE>(pSeqLim, MR_TAG_SEQ_WIP14, (long) 2))
-	{       
-		pBool->registerGetLabelIdHandler  (ui_WIP_CheckBox_GetLabelId);
-		pBool->registerGetOptionsHandler  (ui_WIP_CheckBox_GetOptions);
-		pBool->registerGetValueHandler    (ui_WIP_CheckBox_GetValue);
-		pBool->registerSetValueHandler    (ui_WIP_CheckBox_SetValue);
-	}	
+    if ( LINK_BOOL_TYPE* pBool=_create<LINK_BOOL_TYPE>(pSeqLim, MR_TAG_SEQ_WIP1, (long) 0))
+    {       
+        pBool->registerGetLabelIdHandler  (ui_WIP_CheckBox_GetLabelId);
+        pBool->registerGetOptionsHandler  (ui_WIP_CheckBox_GetOptions);
+        pBool->registerGetValueHandler    (ui_WIP_CheckBox_GetValue);
+        pBool->registerSetValueHandler    (ui_WIP_CheckBox_SetValue);
+    }	
+    
+    if ( LINK_BOOL_TYPE* pBool=_create<LINK_BOOL_TYPE>(pSeqLim, MR_TAG_SEQ_WIP13, (long) 1))
+    {       
+        pBool->registerGetLabelIdHandler  (ui_WIP_CheckBox_GetLabelId);
+        pBool->registerGetOptionsHandler  (ui_WIP_CheckBox_GetOptions);
+        pBool->registerGetValueHandler    (ui_WIP_CheckBox_GetValue);
+        pBool->registerSetValueHandler    (ui_WIP_CheckBox_SetValue);
+    }	
+
+    if ( LINK_BOOL_TYPE* pBool=_create<LINK_BOOL_TYPE>(pSeqLim, MR_TAG_SEQ_WIP14, (long) 2))
+    {       
+        pBool->registerGetLabelIdHandler  (ui_WIP_CheckBox_GetLabelId);
+        pBool->registerGetOptionsHandler  (ui_WIP_CheckBox_GetOptions);
+        pBool->registerGetValueHandler    (ui_WIP_CheckBox_GetValue);
+        pBool->registerSetValueHandler    (ui_WIP_CheckBox_SetValue);
+    }	
 
 #endif
 
@@ -188,7 +198,7 @@ NLSStatus yarralink::prepare(MrProt *pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo
 {  
     NLS_STATUS  lStatus = SEQU__NORMAL;
     lStatus = fSUPrepSlicePosArray(VER_PTR(pMrProt), VER_PTR(pSeqLim), asSLC);
-	
+    
     double dTotalMeasureTimeUsec    =   1000;
     pSeqExpo->setPreScans                    ( 0 );
     pSeqExpo->setRFEnergyInSequence_Ws       ( 0 );
@@ -198,13 +208,17 @@ NLSStatus yarralink::prepare(MrProt *pMrProt, SeqLim *pSeqLim, SeqExpo *pSeqExpo
     pSeqExpo->setTotalMeasureTimeUsec        ( dTotalMeasureTimeUsec );
     pSeqExpo->setRelevantReadoutsForMeasTime ( 0 ); 
 
+    // Launch the client during the final preparation of the sequence (i.e. after
+    // the apply button has been pressed). This will not occur if no patient is in
+    // the scanner because the adjustment scans will fail and stop the scan.
+
     if ( pSeqLim->isContextNormal() )
     {
-		if (!clientLaunched)
-		{
-			launchClient();
-			clientLaunched=true;
-		}				
+        if (!clientLaunched)
+        {
+            launchClient();
+            clientLaunched=true;
+        }				
     }
 
     return (lStatus);
@@ -227,7 +241,6 @@ NLS_STATUS yarralink::runKernel(MrProt *pMrProt,SeqLim *pSeqLim, SeqExpo *pSeqEx
 {
     return(SEQU__NORMAL); 	
 }
-
 
 
 // ----------------------------------------------------------------------------------
